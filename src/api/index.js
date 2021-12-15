@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:8000";
+const url = "https://travelcomapi123.herokuapp.com";
 
 export const createUser = (user) => {
   return axios.post(`${url}/create-user`, user);
