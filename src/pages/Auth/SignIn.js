@@ -34,7 +34,8 @@ function SignIn() {
           localStorage.setItem("role", res.data["data"]["role"]);
           console.log(res.data["data"]);
           setLoading(false);
-          window.location.href = "https://travelcomfrontend.netlify.app/";
+          window.location.href = "/";
+          // window.location.href = "https://travelcomfrontend.netlify.app/";
         })
         .catch((err) => {
           setLoading(false);
