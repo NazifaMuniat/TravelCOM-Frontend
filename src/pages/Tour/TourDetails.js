@@ -29,18 +29,20 @@ function TourDetails() {
     });
 
     if (role === "user") {
+      console.log("Here")
+      checkBookingAbilityByTourIdAndUserId({ tourId, userId }).then((res) => {
+        console.log("Here")
+        console.log(res.data["data"]);
+        setIsAbleToBook(res.data["data"]);
+        console.log(isAbleToBook);
+      });
+
       getBookedTourByTourIdAndUserId({ tourId, userId }).then((res) => {
         console.log(res.data["data"]);
         setIsBooked(res.data["data"]);
       });
 
-      console.log("Here")
-      // checkBookingAbilityByTourIdAndUserId({ tourId, userId }).then((res) => {
-      //   console.log("Here")
-      //   console.log(res.data["data"]);
-      //   setIsAbleToBook(res.data["data"]);
-      //   console.log(isAbleToBook);
-      // });
+      
     }
     return () => {};
   }, [tourId]);
