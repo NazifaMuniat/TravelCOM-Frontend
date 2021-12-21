@@ -5,6 +5,7 @@ import {
   completeTour,
   deleteTour,
   getBookedTourByTourIdAndUserId,
+  checkBookingAbilityByTourIdAndUserId,
   getTourDetails,
 } from "../../api";
 import Footer from "../../components/Footer";
@@ -13,12 +14,13 @@ function TourDetails() {
   const tourId = window.location.pathname.split("/")[2];
   const userId = localStorage.getItem("id");
   const role = localStorage.getItem("role");
-  const userBookedAnyTour = localStorage.getItem("isBooked");
+  const [isAbleToBook, setIsAbleToBook] = useState(true);
   const [tour, setTour] = useState({});
   const [loading, setLoading] = useState(true);
   const [isBooked, setIsBooked] = useState(false);
 
   useEffect(() => {
+    console.log(role)
     getTourDetails(tourId).then((res) => {
       console.log(res.data["data"]);
       setTour(res.data["data"]);
@@ -31,6 +33,14 @@ function TourDetails() {
         console.log(res.data["data"]);
         setIsBooked(res.data["data"]);
       });
+
+      console.log("Here")
+      // checkBookingAbilityByTourIdAndUserId({ tourId, userId }).then((res) => {
+      //   console.log("Here")
+      //   console.log(res.data["data"]);
+      //   setIsAbleToBook(res.data["data"]);
+      //   console.log(isAbleToBook);
+      // });
     }
     return () => {};
   }, [tourId]);
@@ -100,42 +110,45 @@ function TourDetails() {
                   <h2>{tour.name}</h2>
                   <h4>Location : {tour.location}</h4>
 
-                  {tour.isCompleted ? <TourCompleted /> : (
+                  {tour.isCompleted ? (
+                    <TourCompleted />
+                  ) : (
+                    <div className="row">
+                      <div className="col-md-12">
+                        {tour.bookingOpen ? (
+                          <div>
+                            {tour.userId === userId ? (
+                              <BookingOpenForCoordinator tourId={tourId} />
+                            ) : null}
 
-                  <div className="row">
-                    <div className="col-md-12">
-                      {tour.bookingOpen ? (
-                        <div>
-                          {tour.userId === userId ? (
-                            <BookingOpenForCoordinator tourId={tourId} />
-                          ) : null}
-
-                          {role === "user" ? (
-                            userBookedAnyTour === "true" ? (
-                              <BookedOtherTour />
-                            ) : isBooked ? (
+                            {role === "user" ? (
+                              isAbleToBook === false ? (
+                                <BookedOtherTour />
+                              ) : isBooked ? (
+                                <BookedThisTour />
+                              ) : (
+                                <BookNow tourId={tourId} />
+                              )
+                            ) : null}
+                          </div>
+                        ) : (
+                          <div>
+                            <button className="btn btn-secondary m-3" disabled>
+                              <i className="fa fa-exclamation-triangle"></i>{" "}
+                              Booking is closed.
+                            </button>
+                            {role === "user" && isBooked ? (
                               <BookedThisTour />
-                            ) : (
-                              <BookNow tourId={tourId} />
-                            )
-                          ) : null}
-                        </div>
-                      ) : (
-                        <div>
-                          <button className="btn btn-secondary m-3" disabled>
-                            <i className="fa fa-exclamation-triangle"></i>{" "}
-                            Booking is closed.
-                          </button>
-                          {role === "user" && isBooked ? (
-                            <BookedThisTour />
-                          ) : null}
-                          {tour.userId === userId ? (
-                            <MarkAsCompleted handleComplete={handleComplete} />
-                          ) : null}
-                        </div>
-                      )}
+                            ) : null}
+                            {tour.userId === userId ? (
+                              <MarkAsCompleted
+                                handleComplete={handleComplete}
+                              />
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
                   )}
 
                   <hr />
@@ -326,13 +339,12 @@ function BookedOtherTour() {
   return (
     <p className="h5 mt-3">
       <i className="fa fa-exclamation-triangle text-warning"></i> You have
-      already booked other tour
+      already booked other tour on this date
     </p>
   );
 }
 
 function BookNow(props) {
-  console.log(props.tourId);
   return (
     <Link
       to={`/tour/${props.tourId}/booking`}
