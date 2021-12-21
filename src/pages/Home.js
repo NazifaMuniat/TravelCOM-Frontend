@@ -20,8 +20,8 @@ function Home({ user }) {
           <div className="col-md-12 mt-5">
             <h1 className="display-4 text-center">TravelCOM</h1>
             <p className="lead text-center">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-              quidem.
+              Lets Create a memory with us
+              
             </p>
             {user ? null : (
               <div className="row mt-5">
