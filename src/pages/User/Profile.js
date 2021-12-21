@@ -36,22 +36,34 @@ function Profile() {
         setFacebook(res.data["data"]["facebook"]);
         setInstagram(res.data["data"]["instagram"]);
       });
-      if (role === "coordinator") {
-        getToursByUserId(id).then((res) => {
-          console.log(res.data["data"]);
-          setMyTours(res.data["data"]);
-        });
-      } else if (role === "guide") {
-      } else if (role === "user") {
-        getBookedToursByUserId(id).then((res) => {
-          console.log(res.data["data"]);
-          setBookedTours(res.data["data"]);
-        });
-        getCompletedToursByUserId(id).then((res) => {
-          console.log(res.data["data"]);
-          setCompletedTours(res.data["data"]);
-        });
-      }
+      getToursByUserId(id).then((res) => {
+        console.log(res.data["data"]);
+        setMyTours(res.data["data"]);
+      });
+      getBookedToursByUserId(id).then((res) => {
+        console.log(res.data["data"]);
+        setBookedTours(res.data["data"]);
+      });
+      getCompletedToursByUserId(id).then((res) => {
+        console.log(res.data["data"]);
+        setCompletedTours(res.data["data"]);
+      });
+      // if (role === "coordinator") {
+      //   getToursByUserId(id).then((res) => {
+      //     console.log(res.data["data"]);
+      //     setMyTours(res.data["data"]);
+      //   });
+      // } else if (role === "guide") {
+      // } else if (role === "user") {
+      //   getBookedToursByUserId(id).then((res) => {
+      //     console.log(res.data["data"]);
+      //     setBookedTours(res.data["data"]);
+      //   });
+      //   getCompletedToursByUserId(id).then((res) => {
+      //     console.log(res.data["data"]);
+      //     setCompletedTours(res.data["data"]);
+      //   });
+      // }
     } else {
       window.location.href = "/signin";
     }
