@@ -7,6 +7,7 @@ function TourBooking() {
   const userId = localStorage.getItem("id");
   const [tour, setTour] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [person, setPerson] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [phone, setPhone] = useState("");
   const [transactionID, setTransactionID] = useState("");
@@ -23,16 +24,21 @@ function TourBooking() {
   function handleSubmit() {
     console.log(tour);
     console.log(tourId);
+    console.log(person);
     console.log(paymentMethod);
     console.log(phone);
     console.log(transactionID);
 
-    bookingTour({ tourId, userId, paymentMethod, phone, transactionID }).then(
-      (res) => {
-        window.location.href = `/tour/${tourId}`;
-        localStorage.setItem("isBooked", true);
-      }
-    );
+    bookingTour({
+      tourId,
+      userId,
+      person,
+      paymentMethod,
+      phone,
+      transactionID,
+    }).then((res) => {
+      window.location.href = `/tour/${tourId}`;
+    });
   }
 
   return (
@@ -72,7 +78,17 @@ function TourBooking() {
                   )}
                 </div>
                 <div className="col-md-6">
-                  <div className="form-group">
+                  <div className="form-group mt-3">
+                    <label>Persons</label>
+                    <input
+                      type="number"
+                      className="form-control p-2"
+                      placeholder="Enter Persons"
+                      value={person}
+                      onChange={(e) => setPerson(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group mt-2">
                     <label>Select Payment Method</label>
                     <select
                       className="form-control p-2"

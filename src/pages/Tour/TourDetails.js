@@ -5,7 +5,6 @@ import {
   completeTour,
   deleteTour,
   getBookedTourByTourIdAndUserId,
-  checkBookingAbilityByTourIdAndUserId,
   getTourDetails,
 } from "../../api";
 import Footer from "../../components/Footer";
@@ -14,13 +13,12 @@ function TourDetails() {
   const tourId = window.location.pathname.split("/")[2];
   const userId = localStorage.getItem("id");
   const role = localStorage.getItem("role");
-  const [isAbleToBook, setIsAbleToBook] = useState(true);
+  const userBookedAnyTour = localStorage.getItem("isBooked");
   const [tour, setTour] = useState({});
   const [loading, setLoading] = useState(true);
   const [isBooked, setIsBooked] = useState(false);
 
   useEffect(() => {
-    console.log(role)
     getTourDetails(tourId).then((res) => {
       console.log(res.data["data"]);
       setTour(res.data["data"]);
@@ -29,20 +27,10 @@ function TourDetails() {
     });
 
     if (role === "user") {
-      console.log("Here")
-      checkBookingAbilityByTourIdAndUserId({ tourId, userId }).then((res) => {
-        console.log("Here")
-        console.log(res.data["data"]);
-        setIsAbleToBook(res.data["data"]);
-        console.log(isAbleToBook);
-      });
-
       getBookedTourByTourIdAndUserId({ tourId, userId }).then((res) => {
         console.log(res.data["data"]);
         setIsBooked(res.data["data"]);
       });
-
-      
     }
     return () => {};
   }, [tourId]);
@@ -108,6 +96,10 @@ function TourDetails() {
                     }
                     className="img-fluid mb-3"
                     alt={tour.name}
+                    style={{
+                      height: "40rem",
+                      width: "70rem",
+                    }}
                   />
                   <h2>{tour.name}</h2>
                   <h4>Location : {tour.location}</h4>
@@ -124,7 +116,7 @@ function TourDetails() {
                             ) : null}
 
                             {role === "user" ? (
-                              isAbleToBook === false ? (
+                              userBookedAnyTour === "true" ? (
                                 <BookedOtherTour />
                               ) : isBooked ? (
                                 <BookedThisTour />
@@ -170,6 +162,21 @@ function TourDetails() {
                 <h5 className="note note-info">
                   Duration: {tour.duration} Days
                 </h5>
+              </div>
+            </div>
+            <div className="row mt-2">
+              <div className="col-md-12">
+                <h5 className="note">Tour Spots</h5>
+                <p>
+                  {tour.spots &&
+                    tour.spots.split(",").map((spot) => (
+                      <span key={spot}>
+                        <span className="btn btn-primary p-2 m-2">
+                          <i className="fa fa-map-marker"></i> {spot}
+                        </span>
+                      </span>
+                    ))}
+                </p>
               </div>
             </div>
             <div className="row mt-2">
@@ -305,7 +312,10 @@ function TourDetails() {
 function BookingOpenForCoordinator(props) {
   return (
     <div>
-      <Link className="btn btn-info btn-md m-3" to={`/update-tour/${props.tourId}`}>
+      <Link
+        className="btn btn-info btn-md m-3"
+        to={`/update-tour/${props.tourId}`}
+      >
         <i className="fas fa-edit"></i> Update Details
       </Link>
       <button
@@ -341,12 +351,13 @@ function BookedOtherTour() {
   return (
     <p className="h5 mt-3">
       <i className="fa fa-exclamation-triangle text-warning"></i> You have
-      already booked other tour on this date
+      already booked other tour
     </p>
   );
 }
 
 function BookNow(props) {
+  console.log(props.tourId);
   return (
     <Link
       to={`/tour/${props.tourId}/booking`}

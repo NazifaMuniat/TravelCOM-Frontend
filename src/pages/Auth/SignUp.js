@@ -67,10 +67,6 @@ function SignUp() {
         <div className="row">
           <div className="col-md-12">
             <h1 className="display-4 text-center">TravelCOM</h1>
-            <p className="lead text-center">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-              quidem.
-            </p>
 
             <h3 className="text-center mt-3">
               Welcome!
