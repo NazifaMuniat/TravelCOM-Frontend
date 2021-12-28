@@ -22,7 +22,7 @@ function TourBooking() {
   }, []);
 
   function handleSubmit() {
-    console.log(tour);
+    // console.log(tour);
     console.log(tourId);
     console.log(person);
     console.log(paymentMethod);
