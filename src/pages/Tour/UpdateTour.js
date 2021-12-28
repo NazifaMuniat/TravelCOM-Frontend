@@ -10,6 +10,7 @@ function UpdateTour() {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [location, setLocation] = useState("");
+  const [spots, setSpots] = useState("");
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [duration, setDuration] = useState(0);
@@ -24,6 +25,7 @@ function UpdateTour() {
         description: res.data["data"]["description"],
         image: res.data["data"]["image"],
         location: res.data["data"]["location"],
+        spots: res.data["data"]["spots"],
         startDate: res.data["data"]["startDate"],
         endDate: res.data["data"]["endDate"],
         duration: res.data["data"]["duration"],
@@ -66,6 +68,7 @@ function UpdateTour() {
       description,
       image,
       location,
+      spots,
       startDate,
       endDate,
       duration
@@ -76,6 +79,7 @@ function UpdateTour() {
       description,
       image,
       location,
+      spots,
       startDate,
       endDate,
       duration,
@@ -165,6 +169,23 @@ function UpdateTour() {
                     </div>
                   </div>
                 </div>
+
+                <div className="row">
+                  <div className="col-md-12">
+                    <div className="form-group m-3">
+                      <label>Tour Spots</label>
+                      <input
+                        type="text"
+                        className="form-control p-2"
+                        placeholder="Tour Spots"
+                        value={spots}
+                        onChange={(e) => setSpots(e.target.value)}
+                      />
+                      <small>Enter comma separated spots</small>
+                    </div>
+                  </div>
+                </div>
+                {/* tour update koren ekta */}
 
                 <div className="row">
                   <div className="col-md-4">
