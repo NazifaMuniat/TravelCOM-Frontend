@@ -5,6 +5,7 @@ import {
   completeTour,
   deleteTour,
   getBookedTourByTourIdAndUserId,
+  checkBookingAbilityByTourIdAndUserId,
   getTourDetails,
 } from "../../api";
 import Footer from "../../components/Footer";
@@ -13,7 +14,7 @@ function TourDetails() {
   const tourId = window.location.pathname.split("/")[2];
   const userId = localStorage.getItem("id");
   const role = localStorage.getItem("role");
-  const userBookedAnyTour = localStorage.getItem("isBooked");
+  const [isAbleToBook, setIsAbleToBook] = useState(true);
   const [tour, setTour] = useState({});
   const [loading, setLoading] = useState(true);
   const [isBooked, setIsBooked] = useState(false);
@@ -27,6 +28,13 @@ function TourDetails() {
     });
 
     if (role === "user") {
+      checkBookingAbilityByTourIdAndUserId({ tourId, userId }).then((res) => {
+        console.log("Here")
+        console.log(res.data["data"]);
+        setIsAbleToBook(res.data["data"]);
+        console.log(isAbleToBook);
+      });
+
       getBookedTourByTourIdAndUserId({ tourId, userId }).then((res) => {
         console.log(res.data["data"]);
         setIsBooked(res.data["data"]);
@@ -116,7 +124,7 @@ function TourDetails() {
                             ) : null}
 
                             {role === "user" ? (
-                              userBookedAnyTour === "true" ? (
+                             isAbleToBook === false ? (
                                 <BookedOtherTour />
                               ) : isBooked ? (
                                 <BookedThisTour />
@@ -351,7 +359,7 @@ function BookedOtherTour() {
   return (
     <p className="h5 mt-3">
       <i className="fa fa-exclamation-triangle text-warning"></i> You have
-      already booked other tour
+      already booked other tour on this date
     </p>
   );
 }
